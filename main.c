@@ -24,7 +24,7 @@ int main(int argc, char* argv[]){
 		}
 
 		//Check FPAC magic
-		char fpac_magic[4];
+		char fpac_magic[5];
 		fread(fpac_magic, 1, 4, fpac);
 		if(strcmp(fpac_magic, "FPAC") != 0){
 			printf("Bad fpac magic, aborting\n");
