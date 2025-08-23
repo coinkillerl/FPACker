@@ -1,6 +1,7 @@
 #include "util.h"
 #include <string.h>
 #include <malloc.h>
+#include <stdio.h>
 
 int strLastIndexOfChr(char* str, char target){
 	int current = 0;
