@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "unpacker.h"
 #include "util.h"
+#include "packer.h"
 #include <string.h>
 
 int main(int argc, char* argv[]){
@@ -31,6 +32,20 @@ int main(int argc, char* argv[]){
 		FpacFileInfo* fileInfos = get_all_fileInfo(fpac);
 		unpack_all(fileInfos, fpac);
 		fclose(fpac);
+		return 0;
+	}
+
+	if(strcmp(argv[1], "pack") == 0){
+		if(argc < 3){
+			printf("No dir\n");
+			return 2;
+		}
+		if(strcmp(argv[2], ".")  == 0 || strcmp(argv[2], "..") == 0){
+			printf("Do not use . or ..\n");
+			return 4;
+		}
+		packAll(argv[2]);
+		return 0;
 	}
 	else{
 		printf("Invalid operation\n \n");
@@ -38,6 +53,4 @@ int main(int argc, char* argv[]){
 		return 2;
 	}
 
-
-	return 0;
 }

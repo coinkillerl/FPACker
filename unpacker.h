@@ -1,3 +1,4 @@
+#pragma once
 #include <stdio.h>
 #include "common.h"
 FpacFileInfo* get_all_fileInfo(FILE* fpac);
