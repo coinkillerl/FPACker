@@ -13,3 +13,11 @@ add_executable(FPACker
         unpacker.h
         util.c
         util.h)
+
+message("Platform = ${CMAKE_SYSTEM_NAME}")
+
+IF (MSYS)
+    add_custom_command(TARGET FPACker POST_BUILD
+        COMMAND cp /usr/bin/msys-2.0.dll msys-2.0.dll
+    )
+ENDIF ()

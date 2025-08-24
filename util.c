@@ -37,9 +37,9 @@ int mkpath(char* str, mode_t mode, int isFilePath){
 	strncpy(current_path, paths[0], 4096);
 
 	for(int lv = 0; lv < nOfDirs; lv++){
-		strncat(current_path, "/", 1);
+		strncat(current_path, "/", 2);
 		mkdir(current_path, mode);
-		if(lv < nOfDirs-1) strncat(current_path, paths[lv+1], 4096);
+		if(lv < nOfDirs-1) strncat(current_path, paths[lv+1], 4095);
 	}
 	return 0;
 }
