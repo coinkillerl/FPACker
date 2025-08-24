@@ -1,7 +1,9 @@
 #include <stdint.h>
 #include <stdio.h>
+
+#define FPAC_MAGIC 1128353862
 typedef struct{
-	char fpac_magic[4];
+	uint32_t fpac_magic;
 	uint32_t n_of_files;
 	uint32_t first_file_address;
 	uint32_t unk;

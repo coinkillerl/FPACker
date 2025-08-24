@@ -12,7 +12,10 @@ add_executable(FPACker
         unpacker.c
         unpacker.h
         util.c
-        util.h)
+        util.h
+        vector.h
+        packer.h
+        packer.c)
 
 message("Platform = ${CMAKE_SYSTEM_NAME}")
 
