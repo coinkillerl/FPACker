@@ -79,6 +79,7 @@ int packAll(char* dir) {
 	vector_FpacFile_destroy(files);
 	fflush(new_fpac);
 	fclose(new_fpac);
+	return 1;
 }
 
 int getAllFilePathsForFpacFileVector(char* path, vector_FpacFile* files){
