@@ -44,7 +44,11 @@ int main(int argc, char* argv[]){
 			printf("Do not use . or ..\n");
 			return 4;
 		}
-		packAll(argv[2]);
+		if(packAll(argv[2]) == 0){
+			printf("ERROR : Packing archive has failed\n");
+			return 1;
+		}
+
 		return 0;
 	}
 	else{

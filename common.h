@@ -1,6 +1,8 @@
 #pragma once
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include "vector.h"
 
 #define FPAC_MAGIC 1128353862
 typedef struct{
@@ -24,4 +26,11 @@ typedef struct{
 	uint8_t* file_contents;
 }FpacFile;
 
+VECTOR_DEFINE(FpacFile)
+void vector_FpacFile_destroy(vector_FpacFile vec);
+
 int check_fpac_magic(FILE* fpac);
+int fpacFile_crc32_comparator(const void* a, const void* b);
+int fpacFile_filename_comparator(const void* a, const void* b);
+
+

@@ -44,8 +44,19 @@ int mkpath(char* str, mode_t mode, int isFilePath){
 	return 0;
 }
 
+unsigned long getFileSize(char* path){
+	FILE* fs = fopen(path, "r");
+	if(fs == NULL) return 0;
+	fseek(fs, 0, SEEK_END);
+	long size = ftell(fs);
+	fclose(fs);
+	return size;
+}
+
 void printHelp(){
 	printf("FPACker by CoinKillerL - HELP\n \n");
 	printf("unpack-all <file.pac>\n");
 	printf("\tUnpack every file in the selected archive\n \n");
+	printf("pack <directory>\n");
+	printf("\tPack every file in the selected directory and its subdirectories.\n \n");
 }

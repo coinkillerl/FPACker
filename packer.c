@@ -3,25 +3,85 @@
 #include <string.h>
 #include <malloc.h>
 #include "packer.h"
-#include <sys/stat.h>
 #include <dirent.h>
+#include "crc32.h"
+#include "util.h"
+
 typedef struct dirent dirent;
 
-void packAll(char* dir) {
+int packAll(char* dir) {
 	vector_FpacFile files;
-	scanDirRecursive(dir, &files);
+	FpacHeader fpacHeader;
+	unsigned long filepathBlockSize = 0;
+	unsigned long entryBlockSize = 0;
+	unsigned long dataBlockSize = 0;
+	fpacHeader.fpac_magic = FPAC_MAGIC;
+	fpacHeader.unk = 1;
+
+	getAllFilePathsForFpacFileVector(dir, &files);
+	fpacHeader.n_of_files = files.len;
+	entryBlockSize = sizeof(FpacFileInfo)*fpacHeader.n_of_files;
+
 	for(int i = 0; i < files.len; i++){
-		printf("%s \n", files.items[i].filename);
+		files.items[i].fileInfo.pad0 = 0;
+		files.items[i].fileInfo.file_size = getFileSize(files.items[i].filename);
+		//For some god-who-knows-what reason, the crc32 is XOR'd
+		files.items[i].fileInfo.filename_crc32 = crc32(files.items[i].filename, strlen(files.items[i].filename)) ^ 0xFFFFFFFF;
 	}
 
-	while(files.len > 0){
-		free(files.items[files.len-1].filename);
-		vector_FpacFile_pop_back(&files);
+	//Sort files by filename in ascending order, then calculate the address of each file's filepath string in the filepath block, plus the filepath block's total size
+	qsort(files.items, (size_t)files.len, sizeof(FpacFile), fpacFile_filename_comparator);
+	for(int i = 0; i < files.len; i++){
+		files.items[i].fileInfo.filename_address = sizeof(fpacHeader)+entryBlockSize+filepathBlockSize;
+		filepathBlockSize += strlen(files.items[i].filename)+1;
 	}
-	vector_FpacFile_clear(&files);
+
+	//Calculate the address of each file's data section, plus the data block's total size
+	fpacHeader.first_file_address = sizeof(fpacHeader)+entryBlockSize+filepathBlockSize;
+	for(int i = 0; i < files.len; i++){
+		files.items[i].fileInfo.file_address = sizeof(fpacHeader)+entryBlockSize+filepathBlockSize+dataBlockSize;
+		dataBlockSize += files.items[i].fileInfo.file_size;
+	}
+
+	FILE* new_fpac = fopen("out.pac", "w");
+	if(new_fpac == NULL){
+		vector_FpacFile_destroy(files);
+		return 0;
+	}
+
+	//Write header and entry/info block (sorted by hash)
+	qsort(files.items, files.len, sizeof(FpacFile), fpacFile_crc32_comparator);
+	fwrite(&fpacHeader, sizeof(fpacHeader), 1, new_fpac);
+	for(int i = 0; i < files.len; i++){
+		fwrite(&files.items[i].fileInfo, sizeof(FpacFileInfo), 1, new_fpac);
+	}
+
+	//Write filepath block (sorted by filename)
+	qsort(files.items, files.len, sizeof(FpacFile), fpacFile_filename_comparator);
+	for(int i = 0; i < files.len; i++){
+		fwrite(files.items[i].filename, 1, strlen(files.items[i].filename)+1, new_fpac);
+	}
+
+	//Load data of every file, then write all data one by one (sorted by filename)
+	for(int i = 0; i < files.len; i++){
+		FILE* current_file = fopen(files.items[i].filename, "r");
+		if(current_file == NULL){
+			vector_FpacFile_destroy(files);
+			return 1;
+		}
+		files.items[i].file_contents = malloc(files.items[i].fileInfo.file_size);
+		fread(files.items[i].file_contents, files.items[i].fileInfo.file_size, 1, current_file);
+		fwrite(files.items[i].file_contents, files.items[i].fileInfo.file_size, 1, new_fpac);
+		free(files.items[i].file_contents);
+		fclose(current_file);
+	}
+
+	vector_FpacFile_destroy(files);
+	fflush(new_fpac);
+	fclose(new_fpac);
 }
 
-int scanDirRecursive(char* path, vector_FpacFile* files){
+int getAllFilePathsForFpacFileVector(char* path, vector_FpacFile* files){
 	DIR* dir = opendir(path);
 	if(dir == NULL){
 		return 0;
@@ -44,7 +104,7 @@ int scanDirRecursive(char* path, vector_FpacFile* files){
 			if(strcmp(inode_current->d_name, ".") != 0 && strcmp(inode_current->d_name, "..") != 0){
 				strncat(filepath, "/", 2);
 				strncat(filepath, inode_current->d_name, 256);
-				scanDirRecursive(filepath, files);
+				getAllFilePathsForFpacFileVector(filepath, files);
 			}
 		}
 		else{
