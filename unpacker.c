@@ -52,4 +52,5 @@ void unpack_all(FpacFileInfo* fileInfos, FILE* fpac){
 	for(int i = 0; i < n_of_files; i++){
 		unpack_file(fileInfos[i], fpac);
 	}
+	free(fileInfos);
 }
