@@ -23,9 +23,10 @@ cmake —build . —config release
 
 If you are on Windows, you must use Msys2.
 ## Thanks to
-- lowpolysnake (on codeberg) for vector.h
+- [lowpolysnake](https://codeberg.org/lowpolysnake) for vector.h
 - [Martin Pool](https://github.com/sourcefrog) for strnatcmp.c / .h
-- The people on the Kiseki Modding Discord server.
+- The [sharun](https://github.com/VHSgunzo/sharun) dev team
+- The people on the [Kiseki Modding Discord server](https://discord.com/invite/wYkWS33NQt).
 
 ## The FPAC file format
 This is a quite simple archive format. No compression is used.
