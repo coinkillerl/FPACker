@@ -13,7 +13,7 @@
 typedef struct dirent dirent;
 
 int packAll(char* dir) {
-	vector_FpacFile files;
+	vector_FpacFile files = {0};
 	FpacHeader fpacHeader;
 	unsigned long filepathBlockSize = 0;
 	unsigned long entryBlockSize = 0;
