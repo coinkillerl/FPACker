@@ -1,5 +1,6 @@
 #include "common.h"
 #include <string.h>
+#include "strnatcmp.h"
 int check_fpac_magic(FILE* fpac){
 	uint32_t fpac_magic;
 	rewind(fpac);
@@ -19,11 +20,12 @@ int fpacFile_crc32_comparator(const void* a, const void* b){
 	return 0;
 }
 
-//FIXME : This type of sorting is not correct, the filepaths in FPAC archives probably use natural sorting
+//FIXME : Fails with files that begin with _
 int fpacFile_filename_comparator(const void* a, const void* b){
 	FpacFile* aa = (FpacFile*)a;
 	FpacFile* bb = (FpacFile*)b;
-	return strcasecmp(aa->filename, bb->filename);
+	return strnatcasecmp(aa->filename, bb->filename);
+	//return strcasecmp(aa->filename, bb->filename);
 }
 
 void vector_FpacFile_destroy(vector_FpacFile vec){

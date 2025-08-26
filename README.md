@@ -24,7 +24,8 @@ cmake —build . —config release
 If you are on Windows, you must use Msys2.
 ## Thanks to
 - lowpolysnake (on codeberg) for vector.h
-- The people on the Falcom Modding Discord server.
+- [Martin Pool](https://github.com/sourcefrog) for strnatcmp.c / .h
+- The people on the Kiseki Modding Discord server.
 
 ## The FPAC file format
 This is a quite simple archive format. No compression is used.

@@ -22,7 +22,8 @@ add_executable(FPACker
         vector.h
         packer.h
         packer.c
-        crc32.h)
+        crc32.h
+        strnatcmp.c)
 
 message("Platform = ${CMAKE_SYSTEM_NAME}")
 
