@@ -2,8 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <malloc.h>
-#include "packer.h"
 #include <dirent.h>
+#include <libgen.h>
+#include <unistd.h>
+
+#include "packer.h"
 #include "crc32.h"
 #include "util.h"
 
@@ -15,10 +18,22 @@ int packAll(char* dir) {
 	unsigned long filepathBlockSize = 0;
 	unsigned long entryBlockSize = 0;
 	unsigned long dataBlockSize = 0;
+	char working_dir[4096];
+	//Change working directory to the one that contains the dir to pack
+	realpath(dir, working_dir);
+	dirname(working_dir);
+	chdir(working_dir);
+
+	//Then get the base name of the dir to pack
+	dir = basename(dir);
+
 	fpacHeader.fpac_magic = FPAC_MAGIC;
 	fpacHeader.unk = 1;
 
-	getAllFilePathsForFpacFileVector(dir, &files);
+	if(getAllFilePathsForFpacFileVector(dir, &files) == 0){
+		return 0;
+	}
+
 	fpacHeader.n_of_files = files.len;
 	entryBlockSize = sizeof(FpacFileInfo)*fpacHeader.n_of_files;
 
