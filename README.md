@@ -1,5 +1,5 @@
 # FPACker
-Tool to pack and unpack FPAC (.pac) files used in Trails in the Sky 1st Chapter / Sora no Kiseki the 1st
+Tool to pack and unpack FPAC (.pac) files used in Falcom games
 ## Usage
 Run ./FPACker for help
 > Note that if you are on Windows, you must either run this program from a msys2 shell, or have msys-2.0.dll in the same directory as the executable.
@@ -10,6 +10,7 @@ Run ./FPACker for help
 
 ## Supported Games
 - Trails in the Sky 1st Chapter / Sora no Kiseki the 1st
+- KYOTO XANADU -the Blooming Phantom-
 
 ## How to Build
 Clone this repository, then install gcc, make and cmake,  then run the following commands
