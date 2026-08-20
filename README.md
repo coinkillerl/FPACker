@@ -11,6 +11,7 @@ Run ./FPACker for help
 ## Supported Games
 - Trails in the Sky 1st Chapter / Sora no Kiseki the 1st
 - KYOTO XANADU -the Blooming Phantom-
+- Trails in the Sky 2nd Chapter / Sora no Kiseki the 2nd
 
 ## How to Build
 Clone this repository, then install gcc, make and cmake,  then run the following commands
